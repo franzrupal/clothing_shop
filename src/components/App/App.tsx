@@ -5,8 +5,9 @@ import { Cart } from "../Cart";
 import { Products } from "../Products";
 import { ClothingShopContext } from "../useContext";
 import { useReducer } from "react";
-import { add, addQtty, initialState, remove, shopReducer, totalItems, update } from "../useReducer";
+import { add, addQtty, erase, initialState, remove, save, shopReducer, totalItems, update } from "../useReducer";
 import { Product } from "../../models";
+import { Wishlist } from "../Wishlist";
 import { Checkout } from "../Checkout";
 
 export const App = () => {
@@ -37,6 +38,19 @@ export const App = () => {
     dispatch(totalItems(items));
   };
 
+  const addToWL = (product: Product) => {
+    const updatedCart = state.saved.concat(product);
+    dispatch(save(updatedCart));
+  };
+
+  const removeToWL = (product: Product) => {
+    const updatedCart = state.saved.filter(
+      (currentProduct: Product) => currentProduct.name !== product.name
+    );
+
+    dispatch(erase(updatedCart));
+  };
+
   const updateCart = (product: Product, quantity: number) => {
     const updatedCart = state.products.map((items: { name: string }) =>
       items.name === product.name ? { ...items, quantity: quantity } : items
@@ -50,8 +64,12 @@ export const App = () => {
     totalitems: state.totalitems,
     total: state.total,
     products: state.products,
+    saved: state.saved,
     addToCart,
     removeItem,
+    addToWL,
+    removeToWL,
+    updatePrice,
     updateCart
   }
   return (
@@ -63,11 +81,13 @@ export const App = () => {
         <LinksWrapper>
           <Link to="/">Home</Link>
           <Link to="/cart">Cart</Link>
+          <Link to="/wishlist">Wishlist</Link>
           <Link to="/checkout">Checkout</Link>
         </LinksWrapper>
         <Routes>
           <Route path="/" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </Wrapper>

@@ -94,5 +94,5 @@ export const PlaceOrder = styled.div`
   position: relative;
   margin-top: 20px;
   color : white;
-  background-color: #965b3f ;
+  background-color: #0000FF ;
 `;
