@@ -5,7 +5,7 @@ import { Cart } from "../Cart";
 import { Products } from "../Products";
 import { ClothingShopContext } from "../useContext";
 import { useReducer } from "react";
-import { add, initialState, remove, shopReducer, totalItems, update } from "../useReducer";
+import { add, addQtty, initialState, remove, shopReducer, totalItems, update } from "../useReducer";
 import { Product } from "../../models";
 import { Checkout } from "../Checkout";
 
@@ -37,12 +37,22 @@ export const App = () => {
     dispatch(totalItems(items));
   };
 
+  const updateCart = (product: Product, quantity: number) => {
+    const updatedCart = state.products.map((items: { name: string }) =>
+      items.name === product.name ? { ...items, quantity: quantity } : items
+    );
+    dispatch(addQtty(updatedCart));
+
+    updatePrice(updatedCart);
+  };
+
   const value = {
     totalitems: state.totalitems,
     total: state.total,
     products: state.products,
     addToCart,
-    removeItem
+    removeItem,
+    updateCart
   }
   return (
     <ClothingShopContext.Provider value={value}>
