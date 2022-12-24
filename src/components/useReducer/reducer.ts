@@ -20,6 +20,13 @@ export const shopReducer = (state: ShopState, action: ShopAction) => {
         ...state,
         total: action.payload,
       };
+
+      case ShopActionType.UPDATEITEMS:
+            return {
+              ...state,
+              totalitems: action.payload,
+            };
+
     default:
       return state;
   }

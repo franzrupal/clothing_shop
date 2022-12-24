@@ -5,8 +5,9 @@ import { Cart } from "../Cart";
 import { Products } from "../Products";
 import { ClothingShopContext } from "../useContext";
 import { useReducer } from "react";
-import { add, initialState, remove, shopReducer, update } from "../useReducer";
+import { add, initialState, remove, shopReducer, totalItems, update } from "../useReducer";
 import { Product } from "../../models";
+import { Checkout } from "../Checkout";
 
 export const App = () => {
   const [state, dispatch] = useReducer(shopReducer, initialState);
@@ -29,11 +30,15 @@ export const App = () => {
 
   const updatePrice = (products: [] = []) => {
     let total = 0;
-    products.forEach((product: { price: number; }) => (total = total + product.price));
+    let items = 0;
+    products.forEach((product: { price: number; quantity: number}) => (total = total + product.price * product.quantity, items = items + product.quantity));
 
     dispatch(update(total));
+    dispatch(totalItems(items));
   };
+
   const value = {
+    totalitems: state.totalitems,
     total: state.total,
     products: state.products,
     addToCart,
@@ -48,10 +53,12 @@ export const App = () => {
         <LinksWrapper>
           <Link to="/">Home</Link>
           <Link to="/cart">Cart</Link>
+          <Link to="/checkout">Checkout</Link>
         </LinksWrapper>
         <Routes>
           <Route path="/" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </Wrapper>
     </ClothingShopContext.Provider>
